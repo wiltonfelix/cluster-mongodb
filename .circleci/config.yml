@@ -55,7 +55,7 @@ jobs:
             command: chmod +x ansible/inventory/ec2.py
         - run:
             name: Exec test
-            command: cd ansible &&  ansible-playbook -i inventory/ec2.py --private-key=$KEY_SSH --extra-vars "tag_name_test=$TESTENAME"
+            command: cd ansible &&  ansible-playbook -i inventory/ec2.py test-after-install.yml --private-key=$KEY_SSH --extra-vars "tag_name_test=$TESTENAME"
   destroy-test-code:
     docker:
       - image: hashicorp/packer
