@@ -2,7 +2,6 @@ provider "aws" {
 
 }
 
-
 terraform {
   backend "s3" {
     bucket = "infra-as-code-git"

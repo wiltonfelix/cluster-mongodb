@@ -10,7 +10,13 @@ jobs:
             - "ec:94:45:01:d6:1c:f4:f5:26:17:f9:6d:d3:ec:bd:e1"
       - run:
           name: Chmod to key
-          command: chmod 400 /root/.ssh/id_rsa_ec944501d61cf4f52617f96dd3ecbde1
+          command: chmod 400 $KEY_SSH
+      - run:
+          name: Install Ansible
+          command: sudo pip install ansible
+      - run:
+          name: Install Boto
+          command: sudo pip install boto
       - run:
           name: Download terraform
           command: wget https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip
@@ -19,14 +25,37 @@ jobs:
           command: unzip terraform_0.11.7_linux_amd64.zip
       - run:
           name: Terraform init
-          command: ./terraform init ./mongodb
+          command: ./terraform init -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH ./mongodb
       - run:
           name: Terraform apply
-          command: ./terraform apply --auto-approve ./mongodb
+          command: ./terraform apply --auto-approve -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH ./mongodb
       - run:
           name:  Terraform destroy
-          command: ./terraform destroy --auto-approve ./mongodb
+          command: ./terraform destroy --auto-approve -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH ./mongodb
           when: on_fail
+  validator-infra:
+      docker:
+        - image: circleci/python:2.7-jessie-browsers
+      steps:
+        - checkout
+        - add_ssh_keys:
+            fingerprints:
+              - "ec:94:45:01:d6:1c:f4:f5:26:17:f9:6d:d3:ec:bd:e1"
+        - run:
+            name: Chmod to key
+            command: chmod 400 $KEY_SSH
+        - run:
+            name: Install Ansible
+            command: sudo pip install ansible
+        - run:
+            name: Install Boto
+            command: sudo pip install boto
+        - run:
+            name: Chmod +x
+            command: chmod +x ansible/inventory/ec2.py
+        - run:
+            name: Exec test
+            command: cd ansible &&  ansible-playbook -i inventory/ec2.py --private-key=$KEY_SSH --extra-vars "tag_name_test=$TESTENAME"
   destroy-test-code:
     docker:
       - image: hashicorp/packer
@@ -39,11 +68,11 @@ jobs:
           name: Unzip terraform binary
           command: unzip terraform_0.11.7_linux_amd64.zip
       - run:
-          name: init to clear test code
-          command: ./terraform init ./mongodb
+          name: Init to clear test code
+          command: ./terraform init -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH ./mongodb
       - run:
-          name: destroy test code
-          command: ./terraform destroy --auto-approve ./mongodb
+          name: Destroy test code
+          command: ./terraform destroy --auto-approve -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH ./mongodb
 
 workflows:
   version: 2
@@ -56,9 +85,19 @@ workflows:
                 - master
             tags:
               ignore: /.*/
+      - validator-infra:
+          requires:
+            - test-code
+          filters:
+            branches:
+              only:
+                - master
+              tags:
+                ignore: /.*/
       - destroy-test-code:
           requires:
             - test-code
+            - validator-infra
           filters:
             branches:
               only:
