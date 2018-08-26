@@ -1,0 +1,67 @@
+version: 2
+jobs:
+  test-code:
+    docker:
+      - image: circleci/python:2.7-jessie-browsers
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "ec:94:45:01:d6:1c:f4:f5:26:17:f9:6d:d3:ec:bd:e1"
+      - run:
+          name: Chmod to key
+          command: chmod 400 /root/.ssh/id_rsa_ec944501d61cf4f52617f96dd3ecbde1
+      - run:
+          name: Download terraform
+          command: wget https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip
+      - run:
+          name: Unzip terraform binary
+          command: unzip terraform_0.11.7_linux_amd64.zip
+      - run:
+          name: Terraform init
+          command: ./terraform init ./mongodb
+      - run:
+          name: Terraform apply
+          command: ./terraform apply --auto-approve ./mongodb
+      - run:
+          name:  Terraform destroy
+          command: ./terraform destroy --auto-approve ./mongodb
+          when: on_fail
+  destroy-test-code:
+    docker:
+      - image: hashicorp/packer
+    steps:
+      - checkout
+      - run:
+          name: Download terraform
+          command: wget https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip
+      - run:
+          name: Unzip terraform binary
+          command: unzip terraform_0.11.7_linux_amd64.zip
+      - run:
+          name: init to clear test code
+          command: ./terraform init ./mongodb
+      - run:
+          name: destroy test code
+          command: ./terraform destroy --auto-approve ./mongodb
+
+workflows:
+  version: 2
+  test-code-will-git-mongodb:
+    jobs:
+      - test-code:
+          filters:
+            branches:
+              only:
+                - master
+            tags:
+              ignore: /.*/
+      - destroy-test-code:
+          requires:
+            - test-code
+          filters:
+            branches:
+              only:
+                - master
+            tags:
+              ignore: /.*/
