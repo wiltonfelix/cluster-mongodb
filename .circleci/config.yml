@@ -92,8 +92,8 @@ workflows:
             branches:
               only:
                 - master
-              tags:
-                ignore: /.*/
+            tags:
+              ignore: /.*/
       - destroy-test-code:
           requires:
             - test-code
