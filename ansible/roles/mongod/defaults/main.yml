@@ -1,0 +1,30 @@
+---
+# defaults file for mongodb
+
+mongodb_version: 3.4
+
+mongodb_cluster: true
+
+mongodb_dbpath: '/data/mongodb'
+
+mongodb_systemlog_path: '/var/log/mongodb/mongod.log'
+
+mongodb_port: '27017'
+
+mongodb_replication_set_name: 'wilton-git'
+
+user_name: 'admin'
+
+user_password: 'admin'
+
+database: 'admin'
+
+roles: 'userAdminAnyDatabase'
+
+mongodb_config: '/etc/mongod.conf'
+
+host_dns1: "{{ host_dns1 }}"
+
+host_dns2: "{{ host_dns2 }}"
+
+host_dns3: "{{ host_dns3 }}"

@@ -1,0 +1,14 @@
+---
+  - name: Install Goss
+    shell: curl -L https://github.com/aelsabbahy/goss/releases/download/v0.3.6/goss-linux-amd64 -o /usr/bin/goss
+
+  - name: Read File
+    shell: chmod +rx /usr/bin/goss
+
+  - name: Create File to test
+    template:
+      src: goss.yaml
+      dest: /opt/goss.yaml
+
+  - name: Exec Test
+    shell: goss -g /opt/goss.yaml validate

@@ -1,0 +1,8 @@
+---
+  - name: mongodb install playbook
+    hosts: tag_Name_{{ tag_name_test }}
+    become: yes
+
+
+    roles:
+      - test-after-install

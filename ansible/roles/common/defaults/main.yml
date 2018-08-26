@@ -1,0 +1,18 @@
+---
+
+packages:
+  Debian:
+    - htop
+    - git
+    - sysstat
+    - telnet
+    - apt-transport-https
+  RedHat:
+    - htop
+    - git
+    - sysstat
+    - telnet
+    - libselinux-python
+
+set_hostname: true
+server_hostname: "{{ ansible_default_ipv4.address }}"

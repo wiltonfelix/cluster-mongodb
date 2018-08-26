@@ -1,0 +1,18 @@
+---
+  file:
+    /etc/mongod.conf:
+      exists: true
+    /data/mongodb:
+      exists: true
+
+  package:
+    mongodb-org-*:
+      installed: true
+
+  port:
+    tcp:27017:
+      listening: true
+
+  process:
+    mongod:
+      running: true

@@ -1,0 +1,116 @@
+---
+  - name: Install MongoDB repository
+    yum_repository:
+      name: mongodb-org-{{ mongodb_version }}.repo
+      description: MongoDB Repository for {{ ansible_distribution_version[:1] }}
+      baseurl: https://repo.mongodb.org/yum/amazon/2013.03/mongodb-org/{{ mongodb_version }}/x86_64/
+      gpgcheck: yes
+      gpgkey: https://www.mongodb.org/static/pgp/server-{{ mongodb_version }}.asc
+    when:
+      ansible_os_family == "RedHat"
+    tags: mongodb redhat
+
+  - name: upgrade all packages
+    yum:
+      name: '*'
+      state: latest
+
+  - name: find disk
+    command: /bin/bash -lc "lsblk | awk '{print $1}'"
+    register: disk_value
+
+  - name: type disk
+    command: /bin/bash -lc "mkfs -t ext4 /dev/{{ disk_value.stdout_lines[3] }}"
+
+  - name: create directory
+    file:
+      path: "{{ mongodb_dbpath }}"
+      state: directory
+      recurse: yes
+
+  - name: mount drive
+    command: /bin/bash -lc "mount /dev/{{ disk_value.stdout_lines[3] }} {{ mongodb_dbpath }}"
+
+  - name: fstab create
+    template:
+      src: fstab.j2
+      dest: /etc/fstab
+
+  - name: mount disk
+    command: mount -a
+
+  - name: redhat | Installing MongoDB
+    yum:
+      name: mongodb-org
+      state: installed
+    register: mongodb_replicaset_exists
+    when:
+      ansible_os_family == "RedHat"
+    tags: redhat
+
+  - name: MongoDB | Install Pymongo
+    easy_install:
+      name: pymongo
+      state: latest
+    ignore_errors: True
+
+  - name: change owner {{ mongodb_dbpath }}
+    file:
+      dest: "{{ mongodb_dbpath }}"
+      owner: mongod
+      group: mongod
+      recurse: yes
+
+  - name: config | Configuring MongoDB
+    template:
+      src:  "mongod.conf.j2"
+      dest: "{{ mongodb_config }}"
+    when:
+      mongodb_cluster == true
+
+  - name: MongoDB restarted
+    service:
+      name: mongod
+      state: restarted
+
+  - wait_for:
+      port: 27017
+      delay: 10
+
+  - name: users | Creating Admin User
+    mongodb_user:
+      database: "{{ database }}"
+      name: "{{ user_name }}"
+      password: "{{ user_password }}"
+      roles: "{{ roles }}"
+
+  - name: config | Configuring MongoDB Set Cluster
+    template:
+      src:  "mongod.conf2.j2"
+      dest: "{{ mongodb_config }}"
+    when:
+      mongodb_cluster == true
+
+  - name: MongoDB restarted
+    service:
+      name: mongod
+      state: restarted
+
+  - wait_for:
+      port: 27017
+      delay: 10
+
+  - name: MongoDB | create mongodb Initiate
+    command: mongo -u "{{ user_name }}" -p "{{ user_password }}" admin --eval 'rs.initiate("{{ host_dns1 }}");'
+    when:
+      mongodb_cluster == true and ansible_host == "{{ host_ip1 }}"
+
+  - name: MongoDB | Add members
+    command: mongo -u "{{ user_name }}" -p "{{ user_password }}" admin --eval 'rs.add("{{ host_dns2 }}");'
+    when:
+      mongodb_cluster == true and ansible_host == "{{ host_ip1 }}"
+
+  - name: MongoDB | Add members
+    command: mongo -u "{{ user_name }}" -p "{{ user_password }}" admin --eval 'rs.add("{{ host_dns3 }}");'
+    when:
+      mongodb_cluster == true and ansible_host == "{{ host_ip1 }}"

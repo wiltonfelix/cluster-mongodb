@@ -1,0 +1,47 @@
+---
+  - name: Wait connection
+    wait_for_connection:
+      timeout: 6000
+      sleep: 5
+
+  - name: Enable epel-release
+    yum:
+      name: epel-release
+      state: latest
+    when: ansible_distribution == 'CentOS'
+    tags: common
+
+  - name: Install default packages
+    package:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - "{{ packages[ansible_os_family] }}"
+    tags: common
+
+  - name: Set hostname {{ ansible_hostname }}
+    hostname:
+      name: "{{ server_hostname }}"
+    when: set_hostname
+    tags: common
+
+  - name: Set hostname {{ ansible_hostname }}
+    hostname:
+      name: "{{ host_dns1 }}"
+    when: ansible_host == "{{ host_ip1 }}"
+    tags: common
+
+  - name: Configure /etc/hosts
+    template:
+      src: etc/hosts
+      dest: /etc/hosts
+    when: set_hostname
+    tags: common
+
+  - name: Set Localtime
+    file:
+      src: /usr/share/zoneinfo/America/Sao_Paulo
+      dest: /etc/localtime
+      state: link
+      force: yes
+    tags: common

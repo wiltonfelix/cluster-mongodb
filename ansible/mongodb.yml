@@ -1,0 +1,9 @@
+---
+  - name: mongodb install playbook
+    hosts: tag_Name_{{ tag_name_terraform }}
+    become: yes
+
+
+    roles:
+      - common
+      - mongod

@@ -1,0 +1,36 @@
+storage:
+  dbPath: {{ mongodb_dbpath }}
+  journal:
+    enabled: true
+#  engine:
+#  mmapv1:
+#  wiredTiger:
+
+systemLog:
+  destination: file
+  logAppend: true
+  path: {{ mongodb_systemlog_path }}
+
+net:
+  port: {{ mongodb_port }}
+
+
+processManagement:
+  fork: true # fork and run in background
+  pidFilePath: /var/run/mongodb/mongod.pid # location of pidfile
+
+replication:
+  replSetName: "{{ mongodb_replication_set_name }}"
+
+
+#security:
+
+#operationProfiling:
+
+#sharding:
+
+## Enterprise-Only Options:
+
+#auditLog:
+
+#snmp:
