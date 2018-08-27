@@ -7,7 +7,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "$KEY_ID"
+            - "ec:94:45:01:d6:1c:f4:f5:26:17:f9:6d:d3:ec:bd:e1"
       - run:
           name: Chmod to key
           command: chmod 400 $KEY_SSH
@@ -40,7 +40,7 @@ jobs:
         - checkout
         - add_ssh_keys:
             fingerprints:
-              - "$KEY_ID"
+              - "ec:94:45:01:d6:1c:f4:f5:26:17:f9:6d:d3:ec:bd:e1"
         - run:
             name: Chmod to key
             command: chmod 400 $KEY_SSH
