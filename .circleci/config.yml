@@ -25,13 +25,13 @@ jobs:
           command: unzip terraform_0.11.7_linux_amd64.zip
       - run:
           name: Terraform init
-          command: ./terraform init -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH ./mongodb
+          command: ./terraform init -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH -var domain=$DNS ./mongodb
       - run:
           name: Terraform apply
-          command: ./terraform apply --auto-approve -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH ./mongodb
+          command: ./terraform apply --auto-approve -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH -var domain=$DNS ./mongodb
       - run:
           name:  Terraform destroy
-          command: ./terraform destroy --auto-approve -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH ./mongodb
+          command: ./terraform destroy --auto-approve -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH -var domain=$DNS ./mongodb
           when: on_fail
   validator-infra:
       docker:
@@ -69,10 +69,10 @@ jobs:
           command: unzip terraform_0.11.7_linux_amd64.zip
       - run:
           name: Init to clear test code
-          command: ./terraform init -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH ./mongodb
+          command: ./terraform init -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH -var domain=$DNS ./mongodb
       - run:
           name: Destroy test code
-          command: ./terraform destroy --auto-approve -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH ./mongodb
+          command: ./terraform destroy --auto-approve -var app_name=$APP_NAME -var environment=$ENVIRONMENT -var local_key=$KEY_SSH -var domain=$DNS ./mongodb
 
 workflows:
   version: 2

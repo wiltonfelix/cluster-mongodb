@@ -28,7 +28,7 @@ module "data_source" {
 
 module "ec2" {
   source               = "../modules/ec2"
-  subnet_id            = "${var.subnet_id}"
+  subnet_ids           = "${var.subnet_ids}"
   app_name             = "${var.app_name}"
   key_pair             = "${var.key_pair}"
   instance_type        = "${var.instance_type}"

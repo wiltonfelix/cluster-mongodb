@@ -27,7 +27,7 @@ variable "app_name" {
   default = ""
 }
 
-variable "subnet_id" {
+variable "subnet_ids" {
   default = "subnet-3a14fb71,subnet-60be6504,subnet-3a14fb71"
 }
 
@@ -46,6 +46,7 @@ variable "environment" {
 
 
 variable "number_of_instances" {
+  description = "not edit"
   default = 3
 }
 
@@ -64,5 +65,6 @@ variable "local_key" {
 }
 
 variable "domain" {
-  default = "rivendel-auth.com.br"
+  description = "My case add in circleci env"
+  default = ""
 }

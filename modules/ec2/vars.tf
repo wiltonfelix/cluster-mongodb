@@ -2,7 +2,7 @@ variable "app_name" {
   default = ""
 }
 
-variable "subnet_id" {
+variable "subnet_ids" {
   default = ""
 }
 
