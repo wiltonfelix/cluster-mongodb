@@ -27,7 +27,7 @@ variable "app_name" {
   default = ""
 }
 
-variable "subnet_ids" {
+variable "subnet_ids_aws" {
   default = "subnet-3a14fb71,subnet-60be6504,subnet-3a14fb71"
 }
 

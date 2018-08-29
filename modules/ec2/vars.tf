@@ -2,7 +2,7 @@ variable "app_name" {
   default = ""
 }
 
-variable "subnet_ids" {
+variable "subnet_ids_aws" {
   default = ""
 }
 

@@ -32,7 +32,7 @@ cd cluster-mongodb
 * `vpc_id`: Id da vpc (*vpc_id*:*vpc-a7aaa3de*)
 * `public_ip`: Deixe o valor default caso queria que a instancia tenha ip publico associado a ela (*default*:*true*)
 * `app_name`: Tag com nome da aplicação, é necessario informa um valor (*default*:*uso no CircleCI*)
-* `subnet_ids`: Lista de ids de subnets, sendo necessarias pelo menos três, caso não tenha repita o valor (*default*:*subnet-3a14fb71,subnet-60be6504,subnet-3a14fb71*)
+* `subnet_ids_aws`: Lista de ids de subnets, sendo necessarias pelo menos três, caso não tenha repita o valor (*default*:*subnet-3a14fb71*,*subnet-60be6504*,*subnet-3a14fb71*)
 * `key_pair`: Nome da key pair que vai ser associada as instancias (*default*:*wilton*)
 * `instance_type`: Tipo das instancias (*default*:*t2.small*)
 * `environment`: Tag com o nome do ambiente, é necessario informa o valor (*default*:*uso no CircleCI*)
@@ -41,3 +41,17 @@ cd cluster-mongodb
 * `volume_size_mongodb`: Tamanho do disco que vai ser usado pelo Mongodb em GB (*volume_size_mongodb*:*30*)
 * `local_key`: Local onde a key pair para ssh está, nesserio ser a mesma que a **key_pair** (*default*:*uso no CircleCI*)
 * `domain`: Dominio onde vai ser criar as entradas de DNS para o cluster de Mongodb (*default*:*uso no CircleCI*)
+
+#### ansible/roles/mongod/defaults/main.tf
+
+* `mongodb_version`: Versão do Mongodb que vai ser instalada (*default*:*3.4*)
+* `mongodb_dbpath`: Caminho onde vai ser montado o disco para ser usado pelo Mongodb (*default*:*/data/mongodb*)
+* `mongodb_systemlog_path`: Caminho onde vão ser gerado os logs do Mongodb (*default*:*/var/log/mongodb/mongod.log*)
+* `mongodb_port`: Porta que o Mongodb usa para se comunicar (*default*:*27017*)
+* `mongodb_replication_set_name`: Nome da Replica Set do Mongodb (*default*:*wilton-git*)
+* `user_name`: Usuário administrador do Mongodb (*default*:*admin*)
+* `user_password`: Senha do usuário administrador do Mongodb (*default*:*admin*)
+
+#### ansible/inventory/ec2.ini
+
+* `vpc_destination_variable`: necessário alterar para o valor correto, caso o valor definido na variável do terraform **public_ip** seja **true** defina como **ip_address**, em caso de **false** defina como **private_ip_address**

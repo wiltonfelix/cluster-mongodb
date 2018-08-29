@@ -3,7 +3,7 @@
 
 mongodb_version: 3.4
 
-mongodb_cluster: true
+mongodb_cluster: true ### don't edit
 
 mongodb_dbpath: '/data/mongodb'
 
@@ -17,14 +17,14 @@ user_name: 'admin'
 
 user_password: 'admin'
 
-database: 'admin'
+database: 'admin' ### don't edit
 
-roles: 'userAdminAnyDatabase'
+roles: 'userAdminAnyDatabase' ### don't edit
 
-mongodb_config: '/etc/mongod.conf'
+mongodb_config: '/etc/mongod.conf' ### don't edit
 
-host_dns1: "{{ host_dns1 }}"
+host_dns1: "{{ host_dns1 }}" ### don't edit, env set by terraform
 
-host_dns2: "{{ host_dns2 }}"
+host_dns2: "{{ host_dns2 }}" ### don't edit, env set by terraform
 
-host_dns3: "{{ host_dns3 }}"
+host_dns3: "{{ host_dns3 }}" ### don't edit, env set by terraform

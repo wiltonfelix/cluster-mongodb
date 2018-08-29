@@ -2,7 +2,7 @@ resource "aws_instance" "ec2_generic_instance" {
   count                       = "${var.number_of_instances}"
   ami                         = "${var.aws_ami}"
   key_name                    = "${var.key_pair}"
-  subnet_ids                  = "${element(split(",", var.subnet_ids), count.index)}"
+  subnet_ids                  = "${element(split(",", var.subnet_ids_aws), count.index)}"
   instance_type               = "${var.instance_type}"
   associate_public_ip_address = "${var.public_ip}"
 

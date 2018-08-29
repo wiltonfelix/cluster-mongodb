@@ -1,5 +1,4 @@
 provider "aws" {
-
 }
 
 terraform {
@@ -28,7 +27,7 @@ module "data_source" {
 
 module "ec2" {
   source               = "../modules/ec2"
-  subnet_ids           = "${var.subnet_ids}"
+  subnet_ids_aws       = "${var.subnet_ids_aws}"
   app_name             = "${var.app_name}"
   key_pair             = "${var.key_pair}"
   instance_type        = "${var.instance_type}"
