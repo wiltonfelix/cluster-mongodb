@@ -1,4 +1,4 @@
-# cluster-mongo
+# Cluster-mongoDB
 
 ![CircleCI](https://circleci.com/gh/wiltonfelix/cluster-mongodb.svg?style=shield&circle-token=6ca800e5db27e2ba0a7c361a562c3b1a4900edf9)
 
@@ -7,11 +7,13 @@
 
 Criar um cluster de Mongodb na **AWS** usando as ferramentas Terraform e Ansible.
 
+
 ## Requisitos
 As seguintes ferramentas instaladas:
 * [Terraform](https://www.terraform.io/downloads.html)
 * [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 * [Credencias AWS](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create.html)
+* [AWS cli](https://docs.aws.amazon.com/pt_br/cli/latest/userguide/installing.html)
 
 
 
@@ -21,7 +23,9 @@ git clone https://github.com/wiltonfelix/cluster-mongodb.git
 
 cd cluster-mongodb
 ```
-### Edite as variáveis nos seguintes locais
+
+### Edite as variáveis nos seguintes arquivos
+
 
 #### mongodb/vars.tf
 
@@ -42,6 +46,7 @@ cd cluster-mongodb
 * `local_key`: Local onde a key pair para ssh está, nesserio ser a mesma que a **key_pair** (*default*:*uso no CircleCI*)
 * `domain`: Dominio onde vai ser criar as entradas de DNS para o cluster de Mongodb (*default*:*uso no CircleCI*)
 
+
 #### ansible/roles/mongod/defaults/main.tf
 
 * `mongodb_version`: Versão do Mongodb que vai ser instalada (*default*:*3.4*)
@@ -52,6 +57,16 @@ cd cluster-mongodb
 * `user_name`: Usuário administrador do Mongodb (*default*:*admin*)
 * `user_password`: Senha do usuário administrador do Mongodb (*default*:*admin*)
 
+
 #### ansible/inventory/ec2.ini
 
 * `vpc_destination_variable`: necessário alterar para o valor correto, caso o valor definido na variável do terraform **public_ip** seja **true** defina como **ip_address**, em caso de **false** defina como **private_ip_address**
+
+
+## Executando
+```
+terraform init
+
+terraform apply
+
+```
