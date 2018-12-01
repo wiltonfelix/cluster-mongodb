@@ -15,9 +15,6 @@ As seguintes ferramentas instaladas:
 * [Credencias AWS](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create.html)
 * [AWS cli](https://docs.aws.amazon.com/pt_br/cli/latest/userguide/installing.html)
 
-
-
-
 ## Como usar
 ```
 git clone https://github.com/wiltonfelix/cluster-mongodb.git
