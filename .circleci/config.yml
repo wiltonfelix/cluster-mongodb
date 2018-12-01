@@ -1,13 +1,13 @@
 version: 2
 jobs:
-  test-code:
+  create-infra:
     docker:
       - image: circleci/python:2.7-jessie-browsers
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "ec:94:45:01:d6:1c:f4:f5:26:17:f9:6d:d3:ec:bd:e1"
+            - "$KEY_SSH"
       - run:
           name: Chmod to key
           command: chmod 400 $KEY_SSH
@@ -40,7 +40,7 @@ jobs:
         - checkout
         - add_ssh_keys:
             fingerprints:
-              - "ec:94:45:01:d6:1c:f4:f5:26:17:f9:6d:d3:ec:bd:e1"
+              - "$KEY_SSH"
         - run:
             name: Chmod to key
             command: chmod 400 $KEY_SSH
@@ -56,7 +56,7 @@ jobs:
         - run:
             name: Exec test
             command: cd ansible &&  ansible-playbook -i inventory/ec2.py test-after-install.yml --private-key=$KEY_SSH --extra-vars "tag_name_test=$TESTENAME"
-  destroy-test-code:
+  destroy-infra:
     docker:
       - image: hashicorp/packer
     steps:
@@ -76,9 +76,9 @@ jobs:
 
 workflows:
   version: 2
-  test-code-will-git-mongodb:
+  test-infra-will-git-mongodb:
     jobs:
-      - test-code:
+      - create-infra:
           filters:
             branches:
               only:
@@ -94,7 +94,7 @@ workflows:
                 - master
             tags:
               ignore: /.*/
-      - destroy-test-code:
+      - destroy-infra:
           requires:
             - test-code
             - validator-infra
