@@ -10,7 +10,7 @@ jobs:
             - "b2:f0:01:35:1f:8c:46:f3:be:23:ea:d9:1a:33:51:a9"
       - run:
             name: local
-            command: pwd && ls -la .circleci 
+            command: pwd && ls -la /home/circleci
       - run:
           name: Chmod to key
           command: chmod 400 $KEY_SSH
